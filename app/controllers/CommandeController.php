@@ -135,6 +135,42 @@ class CommandeController extends Controller
             return;
         }
 
+        if ($old['paiement'] === 'mobile_money') {
+            try {
+                if (!Fapshi::configOk()) {
+                    throw new RuntimeException('Les identifiants Fapshi ne sont pas configurés.');
+                }
+
+                $client = clientConnecte();
+                $reponse = Fapshi::initiate([
+                    'amount'      => (int) round($total),
+                    'email'       => $client['email'] ?? null,
+                    'redirectUrl' => url('paiement/callback'),
+                    'userId'      => (string) $idClient,
+                    'externalId'  => (string) $idCommande,
+                    'message'     => 'Commande Kamer Taste n° ' . $idCommande,
+                ]);
+
+                $transId = trim((string) ($reponse['transId'] ?? ''));
+                $link = trim((string) ($reponse['link'] ?? ''));
+                if ($transId === '' || $link === '') {
+                    throw new RuntimeException('Fapshi n’a pas retourné de lien de paiement.');
+                }
+
+                $this->model('Paiement')->enregistrerTransaction($idCommande, $transId);
+                Panier::vider();
+                header('Location: ' . $link);
+                exit;
+            } catch (Throwable $e) {
+                error_log('Fapshi initiation : ' . $e->getMessage());
+                $this->model('Paiement')->mettreAJour($idCommande, 'echoue');
+                $this->afficherFormulaire([
+                    'Le paiement Mobile Money n’a pas pu être initié. Vérifiez la configuration Fapshi ou choisissez le paiement en espèces.',
+                ], $old);
+                return;
+            }
+        }
+
         Panier::vider();
         $this->redirect('commande/confirmation/' . $idCommande);
     }

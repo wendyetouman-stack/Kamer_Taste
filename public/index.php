@@ -8,6 +8,13 @@ require APP . '/helpers/functions.php';
 spl_autoload_register(function (string $class) {
     foreach (['core', 'controllers', 'controllers/admin', 'models'] as $dir) {
         $file = APP . "/$dir/$class.php";
+
+        // Fallback pour les fichiers dont le nom est entièrement en minuscules,
+        // notamment app/core/panier.php pour la classe Panier.
+        if (!is_file($file)) {
+            $file = APP . "/$dir/" . strtolower($class) . '.php';
+        }
+
         if (is_file($file)) {
             require $file;
             return;

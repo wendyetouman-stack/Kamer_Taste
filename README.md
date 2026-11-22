@@ -66,6 +66,12 @@ restaurant-ecommerce/
 
 Les URL suivent le format `/controleur/methode/parametres`, par exemple `/produit/show/3` ou `/admin/commande`.
 
+## Paiement Fapshi en sandbox
+
+Pour tester Fapshi, l'application locale doit rester distincte de ses URL publiques HTTPS. Les identifiants doivent être sandbox, conservés dans les variables d'environnement et non intégrés au code.
+
+La procédure complète, notamment l'utilisation obligatoire d'une adresse HTTPS publique pour le callback et le webhook, est décrite dans [`docs/fapshi-sandbox.md`](docs/fapshi-sandbox.md).
+
 ## Mise en production
 
 - Faire pointer le domaine vers le dossier `public/`
