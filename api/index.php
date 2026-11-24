@@ -70,3 +70,4 @@ set_exception_handler(function (Throwable $e) {
 
 ob_start();
 (new Router())->dispatch();
+ob_end_flush();

@@ -10,12 +10,13 @@ $env = static function (string $cle, string $defaut = ''): string {
 };
 
 return [
-    'host'    => $env('DB_HOST', 'localhost'),
-    'port'    => $env('DB_PORT', '3306'),
-    'name'    => $env('DB_NAME', 'restaurant_db'),
-    'user'    => $env('DB_USER', 'root'),
-    'pass'    => $env('DB_PASS', ''),
+    'host'    => $env('DB_HOST', $env('HOST', 'localhost')),
+    'port'    => $env('DB_PORT', $env('PORT', '3306')),
+    'name'    => $env('DB_NAME', $env('DATABASE', 'restaurant_db')),
+    'user'    => $env('DB_USER', $env('USERNAME', 'root')),
+    'pass'    => $env('DB_PASS', $env('PASSWORD', '')),
     'charset' => 'utf8mb4',
     'ssl'     => $env('DB_SSL', '0') === '1',
     'ssl_ca'  => $env('DB_SSL_CA', ''),
 ];
+
