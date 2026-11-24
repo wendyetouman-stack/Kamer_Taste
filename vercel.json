@@ -1,11 +1,12 @@
 {
-  "outputDirectory": "public",
   "functions": {
-    "api/index.php": { "runtime": "vercel-php@0.7.3" }
+    "api/index.php": {
+      "runtime": "vercel-php@0.7.3"
+    }
   },
-  "routes": [
-    { "src": "/index\\.php", "dest": "/api/index.php" },
-    { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "/api/index.php" }
+  "rewrites": [
+    { "source": "/assets/(.*)", "destination": "/public/assets/$1" },
+    { "source": "/(.*)", "destination": "/api/index.php" }
   ]
 }
+
