@@ -1,0 +1,6 @@
+.git
+docs
+database
+README.md
+*.sql
+.env

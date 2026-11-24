@@ -8,13 +8,6 @@ require APP . '/helpers/functions.php';
 spl_autoload_register(function (string $class) {
     foreach (['core', 'controllers', 'controllers/admin', 'models'] as $dir) {
         $file = APP . "/$dir/$class.php";
-
-        // Fallback pour les fichiers dont le nom est entièrement en minuscules,
-        // notamment app/core/panier.php pour la classe Panier.
-        if (!is_file($file)) {
-            $file = APP . "/$dir/" . strtolower($class) . '.php';
-        }
-
         if (is_file($file)) {
             require $file;
             return;
@@ -22,8 +15,17 @@ spl_autoload_register(function (string $class) {
     }
 });
 
+// Sur Vercel (serverless), les fichiers de session ne sont pas partagés entre les requêtes :
+// on range donc les sessions dans la base de données.
+$surVercel = getenv('VERCEL') !== false || isset($_SERVER['VERCEL']);
+if ($surVercel || getenv('SESSION_DRIVER') === 'db') {
+    session_set_save_handler(new DbSessionHandler(), true);
+}
+ini_set('session.gc_maxlifetime', '86400');   // 24 h
+
 // Cookie de session plus sûr (inaccessible au JavaScript, envoyé en HTTPS si disponible)
-$https = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+$https = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+      || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
 session_set_cookie_params([
     'lifetime' => 0,
     'path'     => '/',

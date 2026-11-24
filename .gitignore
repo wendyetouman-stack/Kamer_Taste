@@ -1,5 +1,5 @@
 # Configuration locale (mots de passe)
-app/config/database.php
+
 .env
 
 # Sauvegardes de la base (données réelles de clients)
