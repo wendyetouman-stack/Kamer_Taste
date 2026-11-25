@@ -14,3 +14,5 @@ test.php
 .vscode/
 .idea/
 Thumbs.db
+public/index.php
+public/.htaccess
