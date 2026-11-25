@@ -5,11 +5,14 @@ class Router
     {
         $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 
-        // Retire le sous-dossier éventuel (XAMPP)
-        $base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
-        if ($base !== '' && str_starts_with($path, $base)) {
-            $path = substr($path, strlen($base));
-        }
+      // Retire le sous-dossier éventuel (XAMPP uniquement, pas sur Vercel)
+$surVercel = getenv('VERCEL') !== false || isset($_SERVER['VERCEL']);
+if (!$surVercel) {
+    $base = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
+    if ($base !== '' && str_starts_with($path, $base)) {
+        $path = substr($path, strlen($base));
+    }
+}
 
         $segments = array_values(array_filter(explode('/', trim($path, '/'))));
 
