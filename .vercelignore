@@ -4,3 +4,5 @@ database
 README.md
 *.sql
 .env
+public/inidex.php
+public/.htaccess
