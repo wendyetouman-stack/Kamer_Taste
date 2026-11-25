@@ -483,3 +483,21 @@ body.admin::before { display: none; }
 .suivi li.actuel { background: #c0392b; color: #fff; font-weight: bold; }
 
 .message-erreur { background: #fdecea; border-left-color: #c0392b; }
+
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 16px;
+  }
+  header nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    width: 100%;
+  }
+  header nav a {
+    white-space: nowrap;
+  }
+}
