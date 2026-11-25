@@ -6,10 +6,16 @@
 define('APP_NAME', 'Kamer Taste');
 
 // Affichage des erreurs (à désactiver en production)
-$baseUrl = getenv('BASE_URL') ?: ($_SERVER['BASE_URL'] ?? 'http://localhost:8080/restaurant-ecommerce/public');
+$baseUrl = getenv('BASE_URL') ?: ($_SERVER['BASE_URL'] ?? '');
+if ($baseUrl === '') {
+    $surVercel = getenv('VERCEL') !== false || isset($_SERVER['VERCEL']);
+    $baseUrl = $surVercel
+        ? 'https://' . ($_SERVER['HTTP_HOST'] ?? 'kamertaste.vercel.app')
+        : 'http://localhost:8080/restaurant-ecommerce/public';
+}
 define('BASE_URL', rtrim($baseUrl, '/'));
-define('APP_DEBUG', !(getenv('VERCEL') || isset($_SERVER['VERCEL'])));
-ini_set('display_errors', APP_DEBUG ? '1' : '0');
+define('APP_DEBUG', true || getenv('VERCEL') || isset($_SERVER['VERCEL']));
+ini_set('display_errors',  '1');
 ini_set('log_errors', '1');
 error_reporting(E_ALL);
 define('FRAIS_LIVRAISON', 1000);   // en FCFA
